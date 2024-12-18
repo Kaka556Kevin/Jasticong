@@ -3,14 +3,13 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class PesananPage extends StatefulWidget {
-  const PesananPage({super.key});
-
   @override
   _PesananPageState createState() => _PesananPageState();
 }
 
 class _PesananPageState extends State<PesananPage> {
   List<dynamic> orders = [];
+  bool isLoading = true;
 
   @override
   void initState() {
@@ -21,16 +20,19 @@ class _PesananPageState extends State<PesananPage> {
   Future<void> fetchOrders() async {
     try {
       final response = await http.get(Uri.parse('http://localhost:3000/api/orders'));
-
       if (response.statusCode == 200) {
         setState(() {
           orders = json.decode(response.body);
+          isLoading = false;
         });
       } else {
-        print('Failed to load orders');
+        throw Exception('Failed to load orders');
       }
     } catch (e) {
-      print('Error: $e');
+      print('Error fetching orders: $e');
+      setState(() {
+        isLoading = false;
+      });
     }
   }
 
@@ -40,18 +42,20 @@ class _PesananPageState extends State<PesananPage> {
       appBar: AppBar(
         title: const Text('Pesanan'),
       ),
-      body: orders.isEmpty
+      body: isLoading
           ? const Center(child: CircularProgressIndicator())
-          : ListView.builder(
-              itemCount: orders.length,
-              itemBuilder: (context, index) {
-                final order = orders[index];
-                return ListTile(
-                  title: Text(order['name']),
-                  subtitle: Text(order['order_details']),
-                );
-              },
-            ),
+          : orders.isEmpty
+              ? const Center(child: Text('No orders available'))
+              : ListView.builder(
+                  itemCount: orders.length,
+                  itemBuilder: (context, index) {
+                    final order = orders[index];
+                    return ListTile(
+                      title: Text(order['name']),
+                      subtitle: Text(order['order_details']),
+                    );
+                  },
+                ),
     );
   }
 }

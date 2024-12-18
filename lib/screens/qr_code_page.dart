@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class QRCodePage extends StatelessWidget {
   final String userId;
 
-  const QRCodePage({required this.userId});
+  const QRCodePage({super.key, required this.userId});
 
   @override
   Widget build(BuildContext context) {
