@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:qr_flutter/qr_flutter.dart';
 
 class QRCodePage extends StatelessWidget {
   final String userId;
 
-  const QRCodePage({super.key, required this.userId});
+  const QRCodePage({required this.userId});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +19,17 @@ class QRCodePage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            QrImage(
-              data: userId,
-              version: QrVersions.auto,
-              size: 200.0,
+            // Simulated QR code using a container with a border
+            Container(
+              width: 200,
+              height: 200,
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: const Center(
+                child: Text('QR Code'),
+              ),
             ),
             const SizedBox(height: 20),
             const Text(
